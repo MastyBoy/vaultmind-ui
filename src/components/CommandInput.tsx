@@ -5,7 +5,14 @@ import { useState } from "react";
 export default function CommandInput() {
   const [command, setCommand] = useState("");
   const [output, setOutput] = useState<string | null>(null);
-  const [memory, setMemory] = useState<any[]>([]);
+  type MemoryEntry = {
+  timestamp: number;
+  command: string;
+  result: string;
+};
+
+const [memory, setMemory] = useState<MemoryEntry[]>([]);
+
 
   const handleExecute = async () => {
     const response = await fetch("https://vaultmind-backend.onrender.com/execute", {
