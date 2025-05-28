@@ -7,7 +7,7 @@ export default function CommandInput() {
   const [output, setOutput] = useState<string | null>(null);
 
   const handleExecute = async () => {
-    const response = await fetch("http://localhost:8000/execute", {
+    const response = await fetch("https://vaultmind-backend.onrender.com/execute", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ input: command }),
