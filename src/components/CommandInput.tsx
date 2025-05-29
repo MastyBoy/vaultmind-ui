@@ -32,34 +32,33 @@ export default function CommandInput() {
   const [rating, setRating] = useState<number>(5);
   const [note, setNote] = useState<string>("");
 
+  const API = "https://vaultmind-backend.onrender.com";
+
   const handleExecute = async () => {
-    const response = await fetch("https://vaultmind-backend.onrender.com/execute", {
+    const res = await fetch(`${API}/execute`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ input: command }),
     });
-    const data = await response.json();
+    const data = await res.json();
     setOutput(data.result);
   };
 
   const fetchMemory = async () => {
-    const res = await fetch("https://vaultmind-backend.onrender.com/memory");
+    const res = await fetch(`${API}/memory`);
     const data = await res.json();
-    console.log("Memory:", data);
     setMemory(data);
   };
 
   const fetchLog = async () => {
-    const res = await fetch("https://vaultmind-backend.onrender.com/log");
+    const res = await fetch(`${API}/log`);
     const data = await res.json();
-    console.log("Logs:", data);
     setLogs(data);
   };
 
   const fetchFeedback = async () => {
-    const res = await fetch("https://vaultmind-backend.onrender.com/feedback");
+    const res = await fetch(`${API}/feedback`);
     const data = await res.json();
-    console.log("Feedback:", data);
     setFeedback(data);
   };
 
@@ -70,7 +69,7 @@ export default function CommandInput() {
       rating,
       note,
     };
-    await fetch("https://vaultmind-backend.onrender.com/feedback", {
+    await fetch(`${API}/feedback`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
