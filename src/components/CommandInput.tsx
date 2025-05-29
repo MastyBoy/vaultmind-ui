@@ -15,7 +15,7 @@ type LogEntry = {
   data: Record<string, any>;
 };
 
-export default function CommandInputV2() {
+export default function CommandInput() {
   const [command, setCommand] = useState("");
   const [output, setOutput] = useState<string | null>(null);
   const [memory, setMemory] = useState<MemoryEntry[]>([]);
