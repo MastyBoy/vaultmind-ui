@@ -6,13 +6,11 @@ export default function CommandInput() {
   const [command, setCommand] = useState("");
   const [output, setOutput] = useState<string | null>(null);
   type MemoryEntry = {
-  timestamp: number;
-  command: string;
-  result: string;
-};
-
-const [memory, setMemory] = useState<MemoryEntry[]>([]);
-
+    timestamp: number;
+    command: string;
+    result: string;
+  };
+  const [memory, setMemory] = useState<MemoryEntry[]>([]);
 
   const handleExecute = async () => {
     const response = await fetch("https://vaultmind-backend.onrender.com/execute", {
