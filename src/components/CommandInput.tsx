@@ -12,7 +12,7 @@ type LogEntry = {
   timestamp: number;
   source: string;
   event: string;
-  data: Record<string, any>;
+  data: Record<string, unknown>;
 };
 
 export default function CommandInput() {
