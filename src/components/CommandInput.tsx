@@ -20,6 +20,8 @@ export default function CommandInput() {
   const [output, setOutput] = useState<string | null>(null);
   const [memory, setMemory] = useState<MemoryEntry[]>([]);
   const [logs, setLogs] = useState<LogEntry[]>([]);
+  const [rating, setRating] = useState<number>(5);
+  const [note, setNote] = useState<string>("");
 
   const handleExecute = async () => {
     const response = await fetch("https://vaultmind-backend.onrender.com/execute", {
@@ -41,6 +43,22 @@ export default function CommandInput() {
     const res = await fetch("https://vaultmind-backend.onrender.com/log");
     const data = await res.json();
     setLogs(data);
+  };
+
+  const sendFeedback = async () => {
+    const payload = {
+      command,
+      result: output || "",
+      rating,
+      note,
+    };
+    await fetch("https://vaultmind-backend.onrender.com/feedback", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+    setNote("");
+    alert("Feedback sent.");
   };
 
   return (
@@ -83,6 +101,30 @@ export default function CommandInput() {
           <pre className="text-sm whitespace-pre-wrap">{JSON.stringify(logs, null, 2)}</pre>
         </div>
       )}
+
+      <div className="space-y-2 border-t pt-4">
+        <h3 className="font-bold">Feedback</h3>
+        <input
+          type="number"
+          min="1"
+          max="10"
+          value={rating}
+          onChange={(e) => setRating(parseInt(e.target.value))}
+          className="w-20 p-2 border rounded"
+        />
+        <textarea
+          placeholder="Optional note"
+          value={note}
+          onChange={(e) => setNote(e.target.value)}
+          className="w-full p-2 border rounded"
+        />
+        <button
+          className="bg-green-600 text-white px-4 py-2 rounded"
+          onClick={sendFeedback}
+        >
+          Send Feedback
+        </button>
+      </div>
     </div>
   );
 }
