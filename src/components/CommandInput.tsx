@@ -45,18 +45,21 @@ export default function CommandInput() {
   const fetchMemory = async () => {
     const res = await fetch("https://vaultmind-backend.onrender.com/memory");
     const data = await res.json();
+    console.log("Memory:", data);
     setMemory(data);
   };
 
   const fetchLog = async () => {
     const res = await fetch("https://vaultmind-backend.onrender.com/log");
     const data = await res.json();
+    console.log("Logs:", data);
     setLogs(data);
   };
 
   const fetchFeedback = async () => {
     const res = await fetch("https://vaultmind-backend.onrender.com/feedback");
     const data = await res.json();
+    console.log("Feedback:", data);
     setFeedback(data);
   };
 
@@ -85,6 +88,7 @@ export default function CommandInput() {
         value={command}
         onChange={(e) => setCommand(e.target.value)}
       />
+
       <div className="flex gap-4 flex-wrap">
         <button className="bg-black text-white px-4 py-2 rounded" onClick={handleExecute}>
           Execute
@@ -120,13 +124,6 @@ export default function CommandInput() {
         </div>
       )}
 
-      {feedback.length > 0 && (
-        <div className="max-h-[300px] overflow-y-auto bg-white border p-4 rounded">
-          <h3 className="font-bold mb-2">Feedback Records</h3>
-          <pre className="text-sm whitespace-pre-wrap">{JSON.stringify(feedback, null, 2)}</pre>
-        </div>
-      )}
-
       <div className="space-y-2 border-t pt-4">
         <h3 className="font-bold">Feedback</h3>
         <input
@@ -150,6 +147,13 @@ export default function CommandInput() {
           Send Feedback
         </button>
       </div>
+
+      {feedback.length > 0 && (
+        <div className="max-h-[300px] overflow-y-auto bg-white border p-4 rounded">
+          <h3 className="font-bold mb-2">Feedback Records</h3>
+          <pre className="text-sm whitespace-pre-wrap">{JSON.stringify(feedback, null, 2)}</pre>
+        </div>
+      )}
     </div>
   );
 }
