@@ -7,3 +7,14 @@ export default function Home() {
     </main>
   );
 }
+
+import FeedbackPanel from "@/components/FeedbackPanel";
+
+export default function Home() {
+  return (
+    <main className="min-h-screen p-8 space-y-8">
+      <CommandInput />
+      <FeedbackPanel />
+    </main>
+  );
+}
