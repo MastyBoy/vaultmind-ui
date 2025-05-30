@@ -1,4 +1,3 @@
-// src/components/CommandInput.tsx
 "use client";
 
 import { useState } from "react";
@@ -22,6 +21,14 @@ type FeedbackEntry = {
   result: string;
   rating: number;
   note: string;
+  type?: string;
+};
+
+type SummaryEntry = {
+  total_entries: number;
+  average_rating: number;
+  top_keywords: string[];
+  rating_distribution: Record<string, number>;
 };
 
 export default function CommandInput() {
@@ -30,21 +37,16 @@ export default function CommandInput() {
   const [memory, setMemory] = useState<MemoryEntry[]>([]);
   const [logs, setLogs] = useState<LogEntry[]>([]);
   const [feedback, setFeedback] = useState<FeedbackEntry[]>([]);
-  type SummaryEntry = {
-  total_entries: number;
-  average_rating: number;
-  top_keywords: string[];
-  rating_distribution: Record<string, number>;
-};
-
-const [summary, setSummary] = useState<SummaryEntry | null>(null);
+  const [summary, setSummary] = useState<SummaryEntry | null>(null);
 
   const [rating, setRating] = useState<number>(5);
   const [note, setNote] = useState<string>("");
+  const [type, setType] = useState<string>("");
 
   const [searchMemory, setSearchMemory] = useState("");
   const [logSource, setLogSource] = useState("");
   const [feedbackFilterNote, setFeedbackFilterNote] = useState("");
+  const [feedbackFilterType, setFeedbackFilterType] = useState("");
 
   const API = "https://vaultmind-backend.onrender.com";
 
@@ -85,6 +87,7 @@ const [summary, setSummary] = useState<SummaryEntry | null>(null);
       limit: "100",
     });
     if (feedbackFilterNote) params.append("note_contains", feedbackFilterNote);
+    if (feedbackFilterType) params.append("type", feedbackFilterType);
     const res = await fetch(`${API}/feedback?${params}`);
     const data = await res.json();
     setFeedback(data);
@@ -102,6 +105,7 @@ const [summary, setSummary] = useState<SummaryEntry | null>(null);
       result: output || "",
       rating,
       note,
+      type,
     };
     await fetch(`${API}/feedback`, {
       method: "POST",
@@ -159,6 +163,12 @@ const [summary, setSummary] = useState<SummaryEntry | null>(null);
           value={feedbackFilterNote}
           onChange={(e) => setFeedbackFilterNote(e.target.value)}
         />
+        <input
+          className="p-2 border rounded"
+          placeholder="Filter feedback type"
+          value={feedbackFilterType}
+          onChange={(e) => setFeedbackFilterType(e.target.value)}
+        />
       </div>
 
       {output && (
@@ -195,6 +205,12 @@ const [summary, setSummary] = useState<SummaryEntry | null>(null);
           placeholder="Optional note"
           value={note}
           onChange={(e) => setNote(e.target.value)}
+          className="w-full p-2 border rounded"
+        />
+        <input
+          placeholder="Feedback type (bug/idea/review)"
+          value={type}
+          onChange={(e) => setType(e.target.value)}
           className="w-full p-2 border rounded"
         />
         <button
