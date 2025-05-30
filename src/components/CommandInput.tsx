@@ -1,3 +1,4 @@
+// src/components/CommandInput.tsx
 "use client";
 
 import { useState } from "react";
@@ -41,14 +42,17 @@ export default function CommandInput() {
 
   const [rating, setRating] = useState<number>(5);
   const [note, setNote] = useState<string>("");
-  const [type, setType] = useState<string>("");
+  const [feedbackType, setFeedbackType] = useState("");
 
   const [searchMemory, setSearchMemory] = useState("");
   const [logSource, setLogSource] = useState("");
   const [feedbackFilterNote, setFeedbackFilterNote] = useState("");
-  const [feedbackFilterType, setFeedbackFilterType] = useState("");
+  const [startDate, setStartDate] = useState("2025-05-30");
+  const [endDate, setEndDate] = useState("2025-05-31");
 
   const API = "https://vaultmind-backend.onrender.com";
+
+  const toUnix = (str: string) => Math.floor(new Date(str).getTime() / 1000);
 
   const handleExecute = async () => {
     const res = await fetch(`${API}/execute`, {
@@ -65,6 +69,8 @@ export default function CommandInput() {
       limit: "100",
       offset: "0",
       search: searchMemory,
+      start_date: String(toUnix(startDate)),
+      end_date: String(toUnix(endDate)),
     });
     const res = await fetch(`${API}/memory?${params}`);
     const data = await res.json();
@@ -75,6 +81,8 @@ export default function CommandInput() {
     const params = new URLSearchParams({
       limit: "100",
       offset: "0",
+      start_date: String(toUnix(startDate)),
+      end_date: String(toUnix(endDate)),
     });
     if (logSource) params.append("source", logSource);
     const res = await fetch(`${API}/log?${params}`);
@@ -85,9 +93,11 @@ export default function CommandInput() {
   const fetchFeedback = async () => {
     const params = new URLSearchParams({
       limit: "100",
+      start_date: String(toUnix(startDate)),
+      end_date: String(toUnix(endDate)),
     });
     if (feedbackFilterNote) params.append("note_contains", feedbackFilterNote);
-    if (feedbackFilterType) params.append("type", feedbackFilterType);
+    if (feedbackType) params.append("type", feedbackType);
     const res = await fetch(`${API}/feedback?${params}`);
     const data = await res.json();
     setFeedback(data);
@@ -105,7 +115,7 @@ export default function CommandInput() {
       result: output || "",
       rating,
       note,
-      type,
+      type: feedbackType,
     };
     await fetch(`${API}/feedback`, {
       method: "POST",
@@ -126,7 +136,7 @@ export default function CommandInput() {
         onChange={(e) => setCommand(e.target.value)}
       />
 
-      <div className="flex gap-4 flex-wrap">
+      <div className="flex gap-2 flex-wrap">
         <button className="bg-black text-white px-4 py-2 rounded" onClick={handleExecute}>
           Execute
         </button>
@@ -144,7 +154,19 @@ export default function CommandInput() {
         </button>
       </div>
 
-      <div className="flex gap-4 flex-wrap">
+      <div className="flex gap-2 flex-wrap">
+        <input
+          type="date"
+          className="p-2 border rounded"
+          value={startDate}
+          onChange={(e) => setStartDate(e.target.value)}
+        />
+        <input
+          type="date"
+          className="p-2 border rounded"
+          value={endDate}
+          onChange={(e) => setEndDate(e.target.value)}
+        />
         <input
           className="p-2 border rounded"
           placeholder="Search memory"
@@ -165,16 +187,14 @@ export default function CommandInput() {
         />
         <input
           className="p-2 border rounded"
-          placeholder="Filter feedback type"
-          value={feedbackFilterType}
-          onChange={(e) => setFeedbackFilterType(e.target.value)}
+          placeholder="Feedback type (bug/idea/review)"
+          value={feedbackType}
+          onChange={(e) => setFeedbackType(e.target.value)}
         />
       </div>
 
       {output && (
-        <pre className="bg-gray-100 p-4 rounded border whitespace-pre-wrap text-sm">
-          {output}
-        </pre>
+        <pre className="bg-gray-100 p-4 rounded border whitespace-pre-wrap text-sm">{output}</pre>
       )}
 
       {memory.length > 0 && (
@@ -207,16 +227,7 @@ export default function CommandInput() {
           onChange={(e) => setNote(e.target.value)}
           className="w-full p-2 border rounded"
         />
-        <input
-          placeholder="Feedback type (bug/idea/review)"
-          value={type}
-          onChange={(e) => setType(e.target.value)}
-          className="w-full p-2 border rounded"
-        />
-        <button
-          className="bg-green-600 text-white px-4 py-2 rounded"
-          onClick={sendFeedback}
-        >
+        <button className="bg-green-600 text-white px-4 py-2 rounded" onClick={sendFeedback}>
           Send Feedback
         </button>
       </div>
