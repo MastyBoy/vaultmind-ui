@@ -1,3 +1,4 @@
+// src/components/CommandInput.tsx
 "use client";
 
 import { useState } from "react";
@@ -30,7 +31,6 @@ export default function CommandInput() {
   const [logs, setLogs] = useState<LogEntry[]>([]);
   const [feedback, setFeedback] = useState<FeedbackEntry[]>([]);
   const [summary, setSummary] = useState<any>(null);
-
   const [rating, setRating] = useState<number>(5);
   const [note, setNote] = useState<string>("");
 
