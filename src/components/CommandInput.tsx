@@ -30,7 +30,15 @@ export default function CommandInput() {
   const [memory, setMemory] = useState<MemoryEntry[]>([]);
   const [logs, setLogs] = useState<LogEntry[]>([]);
   const [feedback, setFeedback] = useState<FeedbackEntry[]>([]);
-  const [summary, setSummary] = useState<any>(null);
+  type SummaryEntry = {
+  total_entries: number;
+  average_rating: number;
+  top_keywords: string[];
+  rating_distribution: Record<string, number>;
+};
+
+const [summary, setSummary] = useState<SummaryEntry | null>(null);
+
   const [rating, setRating] = useState<number>(5);
   const [note, setNote] = useState<string>("");
 
