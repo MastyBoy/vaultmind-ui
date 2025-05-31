@@ -41,7 +41,7 @@ export default function CommandInput() {
   const [summary, setSummary] = useState<SummaryEntry | null>(null);
 
   const [rating, setRating] = useState<number>(5);
-  const [note, setNote] = useState<string>("");
+  const [note, setNote] = useState("");
   const [feedbackType, setFeedbackType] = useState("");
 
   const [searchMemory, setSearchMemory] = useState("");
@@ -127,7 +127,7 @@ export default function CommandInput() {
   };
 
   return (
-    <div className="p-4 space-y-4">
+    <div className="p-4 space-y-6">
       <input
         className="w-full p-2 border border-gray-300 rounded"
         type="text"
@@ -136,84 +136,116 @@ export default function CommandInput() {
         onChange={(e) => setCommand(e.target.value)}
       />
 
-<div className="flex flex-wrap gap-2">
-  <button className="bg-black text-white px-4 py-2 rounded" onClick={handleExecute}>
-    Execute
-  </button>
-  <button className="bg-blue-500 text-white px-4 py-2 rounded" onClick={fetchMemory}>
-    Load Memory
-  </button>
-  <button className="bg-purple-600 text-white px-4 py-2 rounded" onClick={fetchLog}>
-    Fetch Log
-  </button>
-  <button className="bg-pink-600 text-white px-4 py-2 rounded" onClick={fetchFeedback}>
-    Load Feedback
-  </button>
-  <button className="bg-yellow-600 text-white px-4 py-2 rounded" onClick={fetchFeedbackSummary}>
-    Get Feedback Summary
-  </button>
-</div>
+      <div className="flex flex-wrap gap-2">
+        <button className="bg-black text-white px-4 py-2 rounded" onClick={handleExecute}>
+          Execute
+        </button>
+        <button className="bg-blue-500 text-white px-4 py-2 rounded" onClick={fetchMemory}>
+          Load Memory
+        </button>
+        <button className="bg-purple-600 text-white px-4 py-2 rounded" onClick={fetchLog}>
+          Fetch Log
+        </button>
+        <button className="bg-pink-600 text-white px-4 py-2 rounded" onClick={fetchFeedback}>
+          Load Feedback
+        </button>
+        <button className="bg-yellow-600 text-white px-4 py-2 rounded" onClick={fetchFeedbackSummary}>
+          Get Feedback Summary
+        </button>
+      </div>
 
-<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
-  <label className="flex flex-col text-sm">
-    Start Date
-    <input
-      type="date"
-      className="p-2 border rounded"
-      value={startDate}
-      onChange={(e) => setStartDate(e.target.value)}
-    />
-  </label>
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+        <label className="flex flex-col text-sm">
+          Start Date
+          <input type="date" className="p-2 border rounded" value={startDate} onChange={(e) => setStartDate(e.target.value)} />
+        </label>
 
-  <label className="flex flex-col text-sm">
-    End Date
-    <input
-      type="date"
-      className="p-2 border rounded"
-      value={endDate}
-      onChange={(e) => setEndDate(e.target.value)}
-    />
-  </label>
+        <label className="flex flex-col text-sm">
+          End Date
+          <input type="date" className="p-2 border rounded" value={endDate} onChange={(e) => setEndDate(e.target.value)} />
+        </label>
 
-  <label className="flex flex-col text-sm">
-    Search Memory
-    <input
-      className="p-2 border rounded"
-      placeholder="Keyword"
-      value={searchMemory}
-      onChange={(e) => setSearchMemory(e.target.value)}
-    />
-  </label>
+        <label className="flex flex-col text-sm">
+          Search Memory
+          <input className="p-2 border rounded" placeholder="Keyword" value={searchMemory} onChange={(e) => setSearchMemory(e.target.value)} />
+        </label>
 
-  <label className="flex flex-col text-sm">
-    Log Source
-    <input
-      className="p-2 border rounded"
-      placeholder="e.g., ui/system"
-      value={logSource}
-      onChange={(e) => setLogSource(e.target.value)}
-    />
-  </label>
+        <label className="flex flex-col text-sm">
+          Log Source
+          <input className="p-2 border rounded" placeholder="e.g., ui/system" value={logSource} onChange={(e) => setLogSource(e.target.value)} />
+        </label>
 
-  <label className="flex flex-col text-sm">
-    Feedback Note
-    <input
-      className="p-2 border rounded"
-      placeholder="Contains keyword"
-      value={feedbackFilterNote}
-      onChange={(e) => setFeedbackFilterNote(e.target.value)}
-    />
-  </label>
+        <label className="flex flex-col text-sm">
+          Feedback Note
+          <input className="p-2 border rounded" placeholder="Contains keyword" value={feedbackFilterNote} onChange={(e) => setFeedbackFilterNote(e.target.value)} />
+        </label>
 
-  <label className="flex flex-col text-sm">
-    Feedback Type
-    <input
-      className="p-2 border rounded"
-      placeholder="bug / idea / review"
-      value={feedbackType}
-      onChange={(e) => setFeedbackType(e.target.value)}
-    />
-  </label>
-</div>
+        <label className="flex flex-col text-sm">
+          Feedback Type
+          <input className="p-2 border rounded" placeholder="bug / idea / review" value={feedbackType} onChange={(e) => setFeedbackType(e.target.value)} />
+        </label>
+      </div>
 
-  
+      {output && (
+        <pre className="bg-gray-100 p-4 rounded border whitespace-pre-wrap text-sm">
+          {output}
+        </pre>
+      )}
+
+      {memory.length > 0 && (
+        <section>
+          <h3 className="font-bold mb-2">Memory Log</h3>
+          <pre className="max-h-[300px] overflow-y-auto bg-white border p-4 rounded text-sm whitespace-pre-wrap">
+            {JSON.stringify(memory, null, 2)}
+          </pre>
+        </section>
+      )}
+
+      {logs.length > 0 && (
+        <section>
+          <h3 className="font-bold mb-2">System Logs</h3>
+          <pre className="max-h-[300px] overflow-y-auto bg-white border p-4 rounded text-sm whitespace-pre-wrap">
+            {JSON.stringify(logs, null, 2)}
+          </pre>
+        </section>
+      )}
+
+      <section className="space-y-2 border-t pt-4">
+        <h3 className="font-bold">Feedback</h3>
+        <input
+          type="number"
+          min="1"
+          max="10"
+          value={rating}
+          onChange={(e) => setRating(parseInt(e.target.value))}
+          className="w-20 p-2 border rounded"
+        />
+        <textarea
+          placeholder="Optional note"
+          value={note}
+          onChange={(e) => setNote(e.target.value)}
+          className="w-full p-2 border rounded"
+        />
+        <button className="bg-green-600 text-white px-4 py-2 rounded" onClick={sendFeedback}>
+          Send Feedback
+        </button>
+      </section>
+
+      {feedback.length > 0 && (
+        <section>
+          <h3 className="font-bold mb-2">Feedback Records</h3>
+          <pre className="max-h-[300px] overflow-y-auto bg-white border p-4 rounded text-sm whitespace-pre-wrap">
+            {JSON.stringify(feedback, null, 2)}
+          </pre>
+        </section>
+      )}
+
+      {summary && (
+        <section className="bg-yellow-100 border p-4 rounded text-sm">
+          <h3 className="font-bold mb-1">Feedback Summary</h3>
+          <pre>{JSON.stringify(summary, null, 2)}</pre>
+        </section>
+      )}
+    </div>
+  );
+}
